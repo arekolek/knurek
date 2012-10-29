@@ -1,6 +1,7 @@
 knurek
 ======
 
-Server uses Google App Engine
+Server dependencies:
 
-Download SDK here: https://developers.google.com/appengine/downloads
+* Google App Engine: https://developers.google.com/appengine/downloads
+* django: https://www.djangoproject.com/download/
