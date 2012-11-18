@@ -10,7 +10,7 @@ gen
 #*.iws
 out
 #classes
-#gen-external-apklibs
+gen-external-apklibs
 
 # Maven
 target
