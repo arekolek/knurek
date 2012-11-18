@@ -1,14 +1,14 @@
 # Android
 #bin
-#gen
+gen
 #lint.xml
 
 # IntelliJ
-#.idea
-#*.iml
+.idea
+*.iml
 #*.ipr
 #*.iws
-#out
+out
 #classes
 #gen-external-apklibs
 
