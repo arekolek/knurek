@@ -1,4 +1,4 @@
-package com.arekolek.knurek;
+package com.github.arekolek.knurek;
 
 import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmentActivity;
 
