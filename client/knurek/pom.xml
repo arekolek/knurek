@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.arekolek</groupId>
@@ -9,8 +10,7 @@
     <name>knurek</name>
 
     <properties>
-        <platform.version> 4.0.1.2
-            </platform.version>
+        <platform.version>4.0.1.2</platform.version>
     </properties>
 
     <dependencies>
@@ -29,14 +29,16 @@
                 <artifactId>android-maven-plugin</artifactId>
                 <version>3.1.1</version>
                 <configuration>
-                    <androidManifestFile>${project.basedir}/AndroidManifest.xml</androidManifestFile>
+                    <androidManifestFile>${project.basedir}/AndroidManifest.xml
+                    </androidManifestFile>
                     <assetsDirectory>${project.basedir}/assets</assetsDirectory>
                     <resourceDirectory>${project.basedir}/res</resourceDirectory>
-                    <nativeLibrariesDirectory>${project.basedir}/src/main/native</nativeLibrariesDirectory>
+                    <nativeLibrariesDirectory>${project.basedir}/src/main/native
+                    </nativeLibrariesDirectory>
                     <sdk>
                         <platform>14</platform>
                     </sdk>
-                                        <undeployBeforeDeploy>true</undeployBeforeDeploy>
+                    <undeployBeforeDeploy>true</undeployBeforeDeploy>
                 </configuration>
                 <extensions>true</extensions>
             </plugin>
