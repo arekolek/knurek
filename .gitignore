@@ -1,3 +1,26 @@
-*~
+# Android
+#bin
+#gen
+#lint.xml
+
+# IntelliJ
+#.idea
+#*.iml
+#*.ipr
+#*.iws
+#out
+#classes
+#gen-external-apklibs
+
+# Maven
+target
+#release.properties
+#pom.xml.*
+
+# python
 *.pyc
+
+# other
+*~
+*.swp
 lastapikeys.py
