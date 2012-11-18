@@ -1,10 +1,10 @@
 package com.arekolek.knurek;
 
-import roboguice.activity.RoboFragmentActivity;
+import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmentActivity;
+
 import roboguice.inject.ContentView;
 
 @ContentView(R.layout.main)
-public class HelloAndroidActivity extends RoboFragmentActivity {
+public class HelloAndroidActivity extends RoboSherlockFragmentActivity {
 
 }
-
