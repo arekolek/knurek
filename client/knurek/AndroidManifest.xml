@@ -4,6 +4,9 @@
           android:versionCode="1"
           android:versionName="0.1">
 
+    <!-- to contact api -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <!-- to sync contacts -->
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
     <uses-permission android:name="android.permission.WRITE_CONTACTS"/>
