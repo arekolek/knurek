@@ -3173,7 +3173,7 @@ class User(_BaseObject):
             
         doc = self._request("user.getInfo", True)
         
-        return _extract(doc, "image")
+        return _extract(doc, "image", 3)
     
     def get_url(self, domain_name = DOMAIN_ENGLISH):
         """Returns the url of the user page on the network. 
