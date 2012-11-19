@@ -4,6 +4,9 @@
           android:versionCode="1"
           android:versionName="0.1">
 
+    <!-- for knurek custom account type -->
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
+
     <uses-sdk android:minSdkVersion="10"
               android:targetSdkVersion="14"
             />
@@ -21,6 +24,28 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <activity
+                android:name=".auth.AuthenticatorActivity"
+                android:excludeFromRecents="true"
+                android:windowSoftInputMode="adjustResize|stateAlwaysVisible"
+                />
+
+        <service android:name=".sync.SyncService">
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter"/>
+            </intent-filter>
+            <meta-data android:name="android.content.SyncAdapter"
+                       android:resource="@xml/syncadapter"/>
+        </service>
+
+        <service android:name=".auth.AuthenticationService">
+            <intent-filter>
+                <action android:name="android.accounts.AccountAuthenticator"/>
+            </intent-filter>
+            <meta-data android:name="android.accounts.AccountAuthenticator"
+                       android:resource="@xml/authenticator"/>
+        </service>
 
     </application>
 
