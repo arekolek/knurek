@@ -4,6 +4,10 @@
           android:versionCode="1"
           android:versionName="0.1">
 
+    <!-- to sync contacts -->
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    <uses-permission android:name="android.permission.WRITE_CONTACTS"/>
+
     <!-- for knurek custom account type -->
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
 
