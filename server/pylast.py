@@ -2786,6 +2786,11 @@ class User(_BaseObject):
         
         return self.name
     
+    def get_real_name(self, properly_capitalized=False):
+        """Returns the user full name."""
+        
+        return _extract(self._request("user.getInfo", True), "realname")
+    
     def get_upcoming_events(self):
         """Returns all the upcoming events for this user. """
         
