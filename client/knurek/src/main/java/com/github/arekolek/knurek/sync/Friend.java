@@ -6,7 +6,7 @@ public class Friend {
 
     private String name;
 
-    private String image;
+    public String image;
 
     public Friend(String name, String realname, String image) {
         this.name = name;

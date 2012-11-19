@@ -61,7 +61,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             }
 
             for(Friend friend : api.getFriends(name)){
-                manager.addContact(friend.realname);
+                manager.addContact(friend.realname, api.downloadAvatar(friend.image));
             }
 
             manager.apply(provider);

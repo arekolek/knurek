@@ -24,15 +24,25 @@ public class ContactManager {
         this.ops = new ArrayList<ContentProviderOperation>();
     }
 
-    public void addContact(String displayName) {
+    public void addContact(String displayName, byte[] avatar) {
         ContentProviderOperation.Builder op = ContentProviderOperation
                 .newInsert(syncUri(ContactsContract.RawContacts.CONTENT_URI))
                 .withValue(ContactsContract.RawContacts.ACCOUNT_TYPE, type)
                 .withValue(ContactsContract.RawContacts.ACCOUNT_NAME, name);
         ops.add(op.build());
 
+        int backref = ops.size() - 1;
+
         op = ContentProviderOperation.newInsert(syncUri(ContactsContract.Data.CONTENT_URI))
-                .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, ops.size() - 1)
+                .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, backref)
+                .withValue(ContactsContract.Data.MIMETYPE,
+                        ContactsContract.CommonDataKinds.Photo.CONTENT_ITEM_TYPE)
+                .withValue(ContactsContract.CommonDataKinds.Photo.PHOTO, avatar);
+
+        ops.add(op.build());
+
+        op = ContentProviderOperation.newInsert(syncUri(ContactsContract.Data.CONTENT_URI))
+                .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, backref)
                 .withValue(ContactsContract.Data.MIMETYPE,
                         ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
                 .withValue(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME,
@@ -43,8 +53,7 @@ public class ContactManager {
 
     public void deleteContact(long id) {
         ContentProviderOperation.Builder op = ContentProviderOperation.newDelete(
-                syncUri(ContentUris
-                        .withAppendedId(ContactsContract.RawContacts.CONTENT_URI, id)));
+                syncUri(ContentUris.withAppendedId(ContactsContract.RawContacts.CONTENT_URI, id)));
         op.withYieldAllowed(true);
         ops.add(op.build());
     }
@@ -56,7 +65,7 @@ public class ContactManager {
     }
 
     private Uri syncUri(Uri uri) {
-        return uri.buildUpon()
-                .appendQueryParameter(ContactsContract.CALLER_IS_SYNCADAPTER, "true").build();
+        return uri.buildUpon().appendQueryParameter(ContactsContract.CALLER_IS_SYNCADAPTER, "true")
+                .build();
     }
 }
