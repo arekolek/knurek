@@ -1,7 +1,14 @@
 # Android
-#bin
+bin
 gen
 #lint.xml
+
+# Eclipse
+.project
+.classpath
+.settings
+#.checkstyle
+#.metadata
 
 # IntelliJ
 .idea
