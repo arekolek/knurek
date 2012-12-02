@@ -20,6 +20,10 @@ target
 # python
 *.pyc
 
+# Ant
+local.properties
+build.xml
+
 # other
 *~
 *.swp
