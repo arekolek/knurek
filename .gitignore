@@ -7,6 +7,7 @@ gen
 .project
 .classpath
 .settings
+.factorypath
 #.checkstyle
 #.metadata
 

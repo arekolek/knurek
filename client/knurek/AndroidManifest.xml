@@ -1,62 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.github.arekolek.knurek"
-          android:versionCode="1"
-          android:versionName="0.1">
+    package="com.github.arekolek.knurek"
+    android:versionCode="1"
+    android:versionName="0.1" >
 
     <!-- to contact api -->
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <!-- to sync contacts -->
-    <uses-permission android:name="android.permission.READ_CONTACTS"/>
-    <uses-permission android:name="android.permission.WRITE_CONTACTS"/>
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
 
     <!-- for knurek custom account type -->
-    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
 
-    <uses-sdk android:minSdkVersion="10"
-              android:targetSdkVersion="14"
-            />
+    <uses-sdk
+        android:minSdkVersion="10"
+        android:targetSdkVersion="14" />
 
     <application
-            android:icon="@drawable/ic_launcher"
-            android:label="@string/label"
-            >
-
-        <activity
-                android:name=".HelloAndroidActivity"
-                >
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/label" >
+        <activity android:name=".HelloAndroidActivity_" >
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
-                android:name=".auth.AuthenticatorActivity"
-                android:excludeFromRecents="true"
-                android:windowSoftInputMode="adjustResize|stateAlwaysVisible"
-                />
+            android:name=".auth.AuthenticatorActivity"
+            android:excludeFromRecents="true"
+            android:windowSoftInputMode="adjustResize|stateAlwaysVisible" />
 
-        <service android:name=".sync.SyncService">
+        <service android:name=".sync.SyncService" >
             <intent-filter>
-                <action android:name="android.content.SyncAdapter"/>
+                <action android:name="android.content.SyncAdapter" />
             </intent-filter>
-            <meta-data android:name="android.content.SyncAdapter"
-                       android:resource="@xml/syncadapter"/>
-            <meta-data android:name="android.provider.CONTACTS_STRUCTURE"
-                       android:resource="@xml/contacts" />
-        </service>
 
-        <service android:name=".auth.AuthenticationService">
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/syncadapter" />
+            <meta-data
+                android:name="android.provider.CONTACTS_STRUCTURE"
+                android:resource="@xml/contacts" />
+        </service>
+        <service android:name=".auth.AuthenticationService" >
             <intent-filter>
-                <action android:name="android.accounts.AccountAuthenticator"/>
+                <action android:name="android.accounts.AccountAuthenticator" />
             </intent-filter>
-            <meta-data android:name="android.accounts.AccountAuthenticator"
-                       android:resource="@xml/authenticator"/>
-        </service>
 
+            <meta-data
+                android:name="android.accounts.AccountAuthenticator"
+                android:resource="@xml/authenticator" />
+        </service>
     </application>
 
 </manifest>
-
