@@ -8,14 +8,15 @@ import android.accounts.NetworkErrorException;
 import android.content.Context;
 import android.os.Bundle;
 
-import com.google.inject.Inject;
+import com.googlecode.androidannotations.annotations.EBean;
+import com.googlecode.androidannotations.annotations.RootContext;
 
+@EBean
 public class Authenticator extends AbstractAccountAuthenticator {
 
-    @Inject
-    private Context context;
+    @RootContext
+    Context context;
 
-    @Inject
     public Authenticator(Context context) {
         super(context);
     }

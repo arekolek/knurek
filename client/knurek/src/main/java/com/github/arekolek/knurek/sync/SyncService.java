@@ -1,19 +1,30 @@
+
 package com.github.arekolek.knurek.sync;
 
-import com.google.inject.Inject;
-
+import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 
-import roboguice.service.RoboService;
+import com.googlecode.androidannotations.annotations.EService;
 
-public class SyncService extends RoboService {
+@EService
+public class SyncService extends Service {
 
-    @Inject
-    private SyncAdapter syncAdapter;
+    private static final Object sSyncAdapterLock = new Object();
+
+    private static SyncAdapter sSyncAdapter = null;
+
+    @Override
+    public void onCreate() {
+        synchronized (sSyncAdapterLock) {
+            if (sSyncAdapter == null) {
+                sSyncAdapter = SyncAdapter_.getInstance_(getApplicationContext());
+            }
+        }
+    }
 
     public IBinder onBind(Intent intent) {
-        return syncAdapter.getSyncAdapterBinder();
+        return sSyncAdapter.getSyncAdapterBinder();
     }
 
 }

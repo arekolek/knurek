@@ -32,7 +32,7 @@
         </activity>
         <activity android:name=".auth.AuthenticatorActivity_" />
 
-        <service android:name=".sync.SyncService" >
+        <service android:name=".sync.SyncService_" >
             <intent-filter>
                 <action android:name="android.content.SyncAdapter" />
             </intent-filter>
@@ -44,7 +44,7 @@
                 android:name="android.provider.CONTACTS_STRUCTURE"
                 android:resource="@xml/contacts" />
         </service>
-        <service android:name=".auth.AuthenticationService" >
+        <service android:name=".auth.AuthenticationService_" >
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
             </intent-filter>

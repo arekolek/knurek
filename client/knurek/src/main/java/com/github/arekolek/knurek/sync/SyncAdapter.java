@@ -1,7 +1,5 @@
 package com.github.arekolek.knurek.sync;
 
-import com.google.inject.Inject;
-
 import android.accounts.Account;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
@@ -16,15 +14,15 @@ import android.os.RemoteException;
 import android.provider.ContactsContract;
 import android.util.Log;
 
-import roboguice.inject.ContextSingleton;
+import com.googlecode.androidannotations.annotations.Bean;
+import com.googlecode.androidannotations.annotations.EBean;
 
-@ContextSingleton
+@EBean
 public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
-    @Inject
-    private Api api;
+    @Bean
+    Api api;
 
-    @Inject
     public SyncAdapter(Context context) {
         super(context, true);
     }

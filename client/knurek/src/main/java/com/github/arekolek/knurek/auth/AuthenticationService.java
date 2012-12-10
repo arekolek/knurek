@@ -1,17 +1,20 @@
+
 package com.github.arekolek.knurek.auth;
 
-import com.google.inject.Inject;
-
+import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 
-import roboguice.service.RoboService;
+import com.googlecode.androidannotations.annotations.Bean;
+import com.googlecode.androidannotations.annotations.EService;
 
-public class AuthenticationService extends RoboService {
+@EService
+public class AuthenticationService extends Service {
 
-    @Inject
-    private Authenticator authenticator;
+    @Bean
+    Authenticator authenticator;
 
+    @Override
     public IBinder onBind(Intent intent) {
         return authenticator.getIBinder();
     }
