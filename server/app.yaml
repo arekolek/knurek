@@ -5,8 +5,8 @@ api_version: 1
 threadsafe: true
 
 handlers:
-- url: /
-  script: src.helloworld.app
+- url: /api/friends/
+  script: src.friends.app
 
 - url: /api/auth/
   script: src.auth.app
