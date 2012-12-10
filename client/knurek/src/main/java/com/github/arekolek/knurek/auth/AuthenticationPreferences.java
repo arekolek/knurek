@@ -3,12 +3,16 @@ package com.github.arekolek.knurek.auth;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.accounts.AuthenticatorException;
+import android.accounts.OperationCanceledException;
 import android.app.Activity;
 
 import com.googlecode.androidannotations.annotations.Background;
 import com.googlecode.androidannotations.annotations.EBean;
 import com.googlecode.androidannotations.annotations.RootContext;
 import com.googlecode.androidannotations.annotations.SystemService;
+
+import java.io.IOException;
 
 @EBean
 public class AuthenticationPreferences {
@@ -42,6 +46,11 @@ public class AuthenticationPreferences {
     public void login(Callback callback) {
         accountManager.addAccount(Constants.ACCOUNT_TYPE, null, null, null, activity, null, null);
         callback.onReady();
+    }
+
+    public String getIdentifier(Account account) throws OperationCanceledException,
+            AuthenticatorException, IOException {
+        return accountManager.blockingGetAuthToken(account, Constants.AUTH_TOKEN_TYPE, false);
     }
 
 }

@@ -10,12 +10,16 @@ import android.os.Bundle;
 
 import com.googlecode.androidannotations.annotations.EBean;
 import com.googlecode.androidannotations.annotations.RootContext;
+import com.googlecode.androidannotations.annotations.SystemService;
 
 @EBean
 public class Authenticator extends AbstractAccountAuthenticator {
 
     @RootContext
     Context context;
+
+    @SystemService
+    AccountManager manager;
 
     public Authenticator(Context context) {
         super(context);
@@ -45,7 +49,13 @@ public class Authenticator extends AbstractAccountAuthenticator {
     @Override
     public Bundle getAuthToken(AccountAuthenticatorResponse response, Account account,
             String authTokenType, Bundle options) throws NetworkErrorException {
-        return null;
+        String authToken = manager.getPassword(account);
+
+        final Bundle result = new Bundle();
+        result.putString(AccountManager.KEY_ACCOUNT_NAME, account.name);
+        result.putString(AccountManager.KEY_ACCOUNT_TYPE, Constants.ACCOUNT_TYPE);
+        result.putString(AccountManager.KEY_AUTHTOKEN, authToken);
+        return result;
     }
 
     @Override
