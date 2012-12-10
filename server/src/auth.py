@@ -11,6 +11,7 @@ class User(db.Model):
     token = db.StringProperty()
     session = db.StringProperty()
     identifier = db.StringProperty()
+    active = db.BooleanProperty()
 
 class AuthPage(webapp2.RequestHandler):
     def get(self):
@@ -41,12 +42,15 @@ class AuthPage(webapp2.RequestHandler):
                         self.response.write('<html><body>Well done ' + user.name + '. You can now go back to the app.</body></html>')
                 else:
                     # return username
+                    user.active = True
+                    user.put()
+                    
                     self.response.headers['Content-Type'] = 'application/json'
                     self.response.write(json.dumps({"name": user.name}))
         else:
             # create new user
             identifier =  base64.urlsafe_b64encode(os.urandom(30))
-            User(identifier=identifier).put()
+            User(active=False, identifier=identifier).put()
             
             self.response.headers['Content-Type'] = 'application/json'
             self.response.write(json.dumps({"identifier": identifier}))
