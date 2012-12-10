@@ -1,6 +1,8 @@
 
 package com.github.arekolek.knurek;
 
+import android.support.v4.app.ActivityCompat;
+
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.github.arekolek.knurek.auth.AuthenticationPreferences;
@@ -35,14 +37,18 @@ public class HelloAndroidActivity extends SherlockFragmentActivity implements Ca
 
     @OptionsItem
     void menuLoginSelected() {
-        authPrefs.login();
+        authPrefs.login(this);
     }
 
     @Override
     @UiThread
     public void onResult(boolean isAuthenticated) {
         this.isAuthenticated = isAuthenticated;
-        invalidateOptionsMenu();
+        ActivityCompat.invalidateOptionsMenu(this);
+    }
+
+    @Override
+    public void onReady() {
     }
 
 }

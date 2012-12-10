@@ -17,6 +17,8 @@ public class AuthenticationPreferences {
 
         void onResult(boolean isAuthenticated);
 
+        void onReady();
+
     }
 
     @SystemService
@@ -37,8 +39,9 @@ public class AuthenticationPreferences {
     }
 
     @Background
-    public void login() {
+    public void login(Callback callback) {
         accountManager.addAccount(Constants.ACCOUNT_TYPE, null, null, null, activity, null, null);
+        callback.onReady();
     }
 
 }
