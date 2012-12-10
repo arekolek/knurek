@@ -8,6 +8,7 @@ gen
 .classpath
 .settings
 .factorypath
+.pydevproject
 #.checkstyle
 #.metadata
 
