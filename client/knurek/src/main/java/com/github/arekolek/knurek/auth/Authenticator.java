@@ -1,7 +1,5 @@
 package com.github.arekolek.knurek.auth;
 
-import com.google.inject.Inject;
-
 import android.accounts.AbstractAccountAuthenticator;
 import android.accounts.Account;
 import android.accounts.AccountAuthenticatorResponse;
@@ -9,6 +7,8 @@ import android.accounts.AccountManager;
 import android.accounts.NetworkErrorException;
 import android.content.Context;
 import android.os.Bundle;
+
+import com.google.inject.Inject;
 
 public class Authenticator extends AbstractAccountAuthenticator {
 
@@ -31,7 +31,7 @@ public class Authenticator extends AbstractAccountAuthenticator {
             throws NetworkErrorException {
         Bundle result = new Bundle();
         result.putParcelable(AccountManager.KEY_INTENT,
-                AuthenticatorActivity.createIntent(context, response));
+                AuthenticatorActivity_.intent(context, response));
         return result;
     }
 

@@ -1,8 +1,7 @@
 package com.github.arekolek.knurek.auth;
 
-import com.github.arekolek.knurek.R;
-
 import android.accounts.Account;
+import android.accounts.AccountAuthenticatorActivity;
 import android.accounts.AccountAuthenticatorResponse;
 import android.accounts.AccountManager;
 import android.content.Context;
@@ -10,18 +9,18 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.EditText;
 
-import roboguice.activity.RoboAccountAuthenticatorActivity;
-import roboguice.inject.ContentView;
-import roboguice.inject.InjectView;
+import com.github.arekolek.knurek.R;
+import com.googlecode.androidannotations.annotations.EActivity;
+import com.googlecode.androidannotations.annotations.ViewById;
 
-@ContentView(R.layout.activity_login)
-public class AuthenticatorActivity extends RoboAccountAuthenticatorActivity {
+@EActivity(R.layout.activity_login)
+public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
-    @InjectView(R.id.login)
-    private EditText accountName;
+    @ViewById(R.id.login)
+    EditText accountName;
 
-    public static Intent createIntent(Context context, AccountAuthenticatorResponse response) {
-        Intent intent = new Intent(context, AuthenticatorActivity.class);
+    public static Intent intent(Context context, AccountAuthenticatorResponse response) {
+        Intent intent = AuthenticatorActivity_.intent(context).get();
         intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
         return intent;
     }
