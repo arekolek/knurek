@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="hello">Cześć knurku!</string>
     <string name="label">Knurek for Last.fm</string>
+    <string name="auth_login_button">Let\'s go!</string>
+    <string name="auth_login_text">Knurek uses Last.fm API to provide you with the service.\n
+        \nYou\'ll be redirected to your browser where you can grant Knurek with access to your account.\n
+        \nYou can later revoke it in your Last.fm settings.</string>
+
 </resources>

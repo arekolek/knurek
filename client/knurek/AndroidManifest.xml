@@ -30,10 +30,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".auth.AuthenticatorActivity_"
-            android:excludeFromRecents="true"
-            android:windowSoftInputMode="adjustResize|stateAlwaysVisible" />
+        <activity android:name=".auth.AuthenticatorActivity_" />
 
         <service android:name=".sync.SyncService" >
             <intent-filter>
