@@ -1,9 +1,12 @@
 application: knurekapi
-version: 1
+version: 2
 runtime: python27
 api_version: 1
 threadsafe: true
 
 handlers:
-- url: /.*
-  script: helloworld.app
+- url: /
+  script: src.helloworld.app
+
+- url: /api/auth/
+  script: src.auth.app
