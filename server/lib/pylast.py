@@ -916,6 +916,27 @@ class SessionKeyGenerator(object):
         
         return doc.getElementsByTagName('key')[0].firstChild.data
     
+    def get_web_auth_url(self, callback):
+        """The user must open this page, and you first, then call get_web_auth_session_key(token) after that."""
+        
+        url = '%(homepage)s/api/auth/?api_key=%(api)s&cb=%(cb)s' % \
+            {"homepage": self.network.homepage, "api": self.network.api_key, "cb": url_quote_plus(callback)}
+        
+        return url
+
+    def get_web_auth_session_key(self, token):
+        """Retrieves the session key of a web authorization process."""
+        
+        request = _Request(self.network, 'auth.getSession', {'token': token})
+        
+        # default action is that a request is signed only when
+        # a session key is provided.
+        request.sign_it()
+        
+        doc = request.execute()
+        
+        return {'key': _extract(doc, "key"), 'name': _extract(doc, "name") } 
+    
     def get_session_key(self, username, password_hash):
         """Retrieve a session key with a username and a md5 hash of the user's password."""
         
