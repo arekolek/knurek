@@ -7,13 +7,11 @@ import com.googlecode.androidannotations.api.rest.MediaType;
 
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
 
-@Rest(converters = {
+@Rest(rootUrl = Constants.ROOT_URL, converters = {
         GsonHttpMessageConverter.class
 })
 @Accept(MediaType.APPLICATION_JSON)
 public interface KnurekRestClient {
-
-    void setRootUrl(String rootUrl);
 
     @Get("/api/auth/")
     Auth getIdentifier();

@@ -12,7 +12,6 @@ import android.text.TextUtils;
 import android.view.View;
 
 import com.github.arekolek.knurek.R;
-import com.googlecode.androidannotations.annotations.AfterInject;
 import com.googlecode.androidannotations.annotations.Background;
 import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EActivity;
@@ -46,11 +45,6 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
     @ViewById
     View step2;
-
-    @AfterInject
-    void setupClient() {
-        client.setRootUrl("http://192.168.1.2:8080");
-    }
 
     @Override
     protected void onResume() {
