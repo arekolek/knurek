@@ -4,25 +4,27 @@ package com.github.arekolek.knurek;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.github.arekolek.knurek.auth.AuthenticationPreferences;
+import com.github.arekolek.knurek.auth.AuthenticationPreferences.Callback;
 import com.googlecode.androidannotations.annotations.Bean;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.OptionsItem;
 import com.googlecode.androidannotations.annotations.OptionsMenu;
+import com.googlecode.androidannotations.annotations.UiThread;
 
 @EActivity(R.layout.main)
 @OptionsMenu(R.menu.main)
-public class HelloAndroidActivity extends SherlockFragmentActivity {
+public class HelloAndroidActivity extends SherlockFragmentActivity implements Callback {
 
     @Bean
     AuthenticationPreferences authPrefs;
 
-    private boolean isAuthenticated;
+    private boolean isAuthenticated = true;
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        isAuthenticated = authPrefs.isAuthenticated();
+        authPrefs.isAuthenticated(this);
     }
 
     @Override
@@ -34,6 +36,13 @@ public class HelloAndroidActivity extends SherlockFragmentActivity {
     @OptionsItem
     void menuLoginSelected() {
         authPrefs.login();
+    }
+
+    @Override
+    @UiThread
+    public void onResult(boolean isAuthenticated) {
+        this.isAuthenticated = isAuthenticated;
+        invalidateOptionsMenu();
     }
 
 }

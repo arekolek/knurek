@@ -13,15 +13,22 @@ import com.googlecode.androidannotations.annotations.SystemService;
 @EBean
 public class AuthenticationPreferences {
 
+    public interface Callback {
+
+        void onResult(boolean isAuthenticated);
+
+    }
+
     @SystemService
     AccountManager accountManager;
 
     @RootContext
     Activity activity;
 
-    public boolean isAuthenticated() {
+    @Background
+    public void isAuthenticated(Callback callback) {
         Account[] accounts = accountManager.getAccountsByType(Constants.ACCOUNT_TYPE);
-        return accounts.length > 0;
+        callback.onResult(accounts.length > 0);
     }
 
     public String getRecentUser() {
