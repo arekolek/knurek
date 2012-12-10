@@ -850,9 +850,9 @@ class SessionKeyGenerator(object):
     1) Web Authentication:
         a. network = get_*_network(API_KEY, API_SECRET)
         b. sg = SessionKeyGenerator(network)
-        c. url = sg.get_web_auth_url()
+        c. url = sg.get_desktop_auth_url()
         d. Ask the user to open the url and authorize you, and wait for it.
-        e. session_key = sg.get_web_auth_session_key(url)
+        e. session_key = sg.get_desktop_auth_session_key(url)
     2) Username and Password Authentication:
         a. network = get_*_network(API_KEY, API_SECRET)
         b. username = raw_input("Please enter your username: ")
@@ -870,7 +870,7 @@ class SessionKeyGenerator(object):
         self.network = network
         self.web_auth_tokens = {}
     
-    def _get_web_auth_token(self):
+    def _get_desktop_auth_token(self):
         """Retrieves a token from the network for web authentication.
         The token then has to be authorized from getAuthURL before creating session.
         """
@@ -886,10 +886,10 @@ class SessionKeyGenerator(object):
         e = doc.getElementsByTagName('token')[0]
         return e.firstChild.data
     
-    def get_web_auth_url(self):
-        """The user must open this page, and you first, then call get_web_auth_session_key(url) after that."""
+    def get_desktop_auth_url(self):
+        """The user must open this page, and you first, then call get_desktop_auth_session_key(url) after that."""
         
-        token = self._get_web_auth_token()
+        token = self._get_desktop_auth_token()
         
         url = '%(homepage)s/api/auth/?api_key=%(api)s&token=%(token)s' % \
             {"homepage": self.network.homepage, "api": self.network.api_key, "token": token}
@@ -898,7 +898,7 @@ class SessionKeyGenerator(object):
         
         return url
 
-    def get_web_auth_session_key(self, url):
+    def get_desktop_auth_session_key(self, url):
         """Retrieves the session key of a web authorization process by its url."""
         
         if url in self.web_auth_tokens.keys():
