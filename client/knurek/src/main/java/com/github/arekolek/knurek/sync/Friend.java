@@ -1,16 +1,20 @@
+
 package com.github.arekolek.knurek.sync;
+
+import android.text.TextUtils;
 
 public class Friend {
 
-    public String realname;
+    String realname;
 
-    private String name;
+    String name;
 
-    public String image;
+    String image;
 
-    public Friend(String name, String realname, String image) {
-        this.name = name;
-        this.realname = realname;
-        this.image = image;
+    public String getDisplayName() {
+        if (TextUtils.isEmpty(realname)) {
+            return name;
+        }
+        return realname;
     }
 }

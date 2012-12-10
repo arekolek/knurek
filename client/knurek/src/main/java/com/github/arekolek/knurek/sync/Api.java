@@ -49,14 +49,15 @@ public class Api {
         for (int i = 0; i < friends.length(); ++i) {
             JSONObject f = friends.getJSONObject(i);
 
-            result.add(convert(f));
+            // result.add(convert(f));
         }
         return result;
     }
 
-    private Friend convert(JSONObject f) throws JSONException {
-        return new Friend(f.getString("name"), f.getString("realname"), f.getString("image"));
-    }
+    // private Friend convert(JSONObject f) throws JSONException {
+    // return new Friend(f.getString("name"), f.getString("realname"),
+    // f.getString("image"));
+    // }
 
     public byte[] downloadAvatar(final String avatarUrl) {
         // If there is no avatar, we're done

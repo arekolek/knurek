@@ -1,9 +1,11 @@
+
 package com.github.arekolek.knurek.sync;
 
 import android.accounts.Account;
+import android.accounts.AuthenticatorException;
+import android.accounts.OperationCanceledException;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
-import android.content.ContentProviderOperation;
 import android.content.Context;
 import android.content.OperationApplicationException;
 import android.content.SyncResult;
@@ -14,17 +16,39 @@ import android.os.RemoteException;
 import android.provider.ContactsContract;
 import android.util.Log;
 
+import com.github.arekolek.knurek.auth.AuthenticationPreferences;
+import com.googlecode.androidannotations.annotations.AfterInject;
 import com.googlecode.androidannotations.annotations.Bean;
 import com.googlecode.androidannotations.annotations.EBean;
+import com.googlecode.androidannotations.annotations.rest.RestService;
+
+import org.springframework.http.client.ClientHttpRequestInterceptor;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @EBean
 public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
+    @RestService
+    FriendsClient client;
+
     @Bean
-    Api api;
+    AuthenticationPreferences authPrefs;
+
+    @Bean
+    CustomHeaderInterceptor authorizer;
 
     public SyncAdapter(Context context) {
         super(context, true);
+    }
+
+    @AfterInject
+    void setupClient() {
+        List<ClientHttpRequestInterceptor> interceptors = new ArrayList<ClientHttpRequestInterceptor>();
+        interceptors.add(authorizer);
+        client.getRestTemplate().setInterceptors(interceptors);
     }
 
     @Override
@@ -44,11 +68,9 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                     .appendQueryParameter(ContactsContract.RawContacts.ACCOUNT_NAME, name)
                     .appendQueryParameter(ContactsContract.RawContacts.ACCOUNT_TYPE, type).build();
 
-            Cursor contacts = provider
-                    .query(contactsUri, new String[]{ContactsContract.RawContacts._ID}, null, null,
-                            null);
-
-            ContentProviderOperation.Builder op;
+            Cursor contacts = provider.query(contactsUri, new String[] {
+                    ContactsContract.RawContacts._ID
+            }, null, null, null);
 
             try {
                 while (contacts.moveToNext()) {
@@ -58,8 +80,12 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                 contacts.close();
             }
 
-            for(Friend friend : api.getFriends(name)){
-                manager.addContact(friend.realname, api.downloadAvatar(friend.image));
+            authorizer.setIdentifier(authPrefs.getIdentifier(account));
+
+            FriendList list = client.getFriends();
+
+            for (Friend friend : list.friends) {
+                manager.addContact(friend.getDisplayName(), null);
             }
 
             manager.apply(provider);
@@ -67,8 +93,13 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             e.printStackTrace();
         } catch (OperationApplicationException e) {
             e.printStackTrace();
+        } catch (OperationCanceledException e) {
+            e.printStackTrace();
+        } catch (AuthenticatorException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
-
 
 }
