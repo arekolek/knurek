@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.Toast;
 
 import com.github.arekolek.knurek.R;
 import com.googlecode.androidannotations.annotations.AfterInject;
@@ -90,7 +89,16 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
     @UiThread
     void setUsername(String name) {
-        Toast.makeText(this, name, Toast.LENGTH_SHORT).show();
+        String type = Constants.ACCOUNT_TYPE;
+
+        AccountManager.get(this).addAccountExplicitly(new Account(name, type), identifier, null);
+
+        Intent intent = new Intent();
+        intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, name);
+        intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, type);
+        setAccountAuthenticatorResult(intent.getExtras());
+        setResult(RESULT_OK, intent);
+
         showView(step2);
     }
 
@@ -114,17 +122,8 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         startActivity(intent);
     }
 
-    public void onSubmit(View view) {
-        String name = "";
-        String type = Constants.ACCOUNT_TYPE;
-
-        AccountManager.get(this).addAccountExplicitly(new Account(name, type), null, null);
-
-        Intent intent = new Intent();
-        intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, name);
-        intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, type);
-        setAccountAuthenticatorResult(intent.getExtras());
-        setResult(RESULT_OK, intent);
+    @Click(R.id.finish)
+    void onFinish() {
         finish();
     }
 

@@ -34,11 +34,28 @@
             android:text="@string/auth_login_button" />
     </LinearLayout>
 
-    <TextView
+    <LinearLayout
         android:id="@+id/step2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/auth_login_done"
-        android:visibility="gone" />
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/layout_padding_side"
+        android:paddingRight="@dimen/layout_padding_side"
+        android:visibility="gone" >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:padding="@dimen/layout_padding_side"
+            android:text="@string/auth_login_done" />
+
+        <Button
+            android:id="@+id/finish"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/auth_login_finish" />
+    </LinearLayout>
 
 </FrameLayout>
