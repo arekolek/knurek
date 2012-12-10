@@ -1,3 +1,4 @@
+
 package com.github.arekolek.knurek.sync;
 
 import android.content.ContentProviderClient;
@@ -33,13 +34,17 @@ public class ContactManager {
 
         int backref = ops.size() - 1;
 
-        op = ContentProviderOperation.newInsert(syncUri(ContactsContract.Data.CONTENT_URI))
-                .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, backref)
-                .withValue(ContactsContract.Data.MIMETYPE,
-                        ContactsContract.CommonDataKinds.Photo.CONTENT_ITEM_TYPE)
-                .withValue(ContactsContract.CommonDataKinds.Photo.PHOTO, avatar);
+        if (avatar != null) {
 
-        ops.add(op.build());
+            op = ContentProviderOperation.newInsert(syncUri(ContactsContract.Data.CONTENT_URI))
+                    .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, backref)
+                    .withValue(ContactsContract.Data.MIMETYPE,
+                            ContactsContract.CommonDataKinds.Photo.CONTENT_ITEM_TYPE)
+                    .withValue(ContactsContract.CommonDataKinds.Photo.PHOTO, avatar);
+
+            ops.add(op.build());
+
+        }
 
         op = ContentProviderOperation.newInsert(syncUri(ContactsContract.Data.CONTENT_URI))
                 .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, backref)
