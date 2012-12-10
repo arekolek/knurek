@@ -5,6 +5,7 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Activity;
 
+import com.googlecode.androidannotations.annotations.Background;
 import com.googlecode.androidannotations.annotations.EBean;
 import com.googlecode.androidannotations.annotations.RootContext;
 import com.googlecode.androidannotations.annotations.SystemService;
@@ -28,6 +29,7 @@ public class AuthenticationPreferences {
         return null;
     }
 
+    @Background
     public void login() {
         accountManager.addAccount(Constants.ACCOUNT_TYPE, null, null, null, activity, null, null);
     }
