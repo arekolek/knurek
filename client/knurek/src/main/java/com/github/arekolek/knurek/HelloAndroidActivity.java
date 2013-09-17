@@ -32,6 +32,7 @@ public class HelloAndroidActivity extends SherlockFragmentActivity implements Ca
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         menu.findItem(R.id.menu_login).setVisible(!isAuthenticated);
+        // return false to hide the menu when it's not needed
         return !isAuthenticated;
     }
 

@@ -132,8 +132,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     @Click(R.id.submit)
     void onSubmit() {
         Uri uri = Uri.parse(Constants.ROOT_URL + "/api/auth/?identifier=" + identifier);
-        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-        startActivity(intent);
+        startActivity(new Intent(Intent.ACTION_VIEW, uri));
     }
 
     @Click(R.id.finish)
