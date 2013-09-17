@@ -5,6 +5,6 @@ To use last.fm api create a file called lastapikeys.py with your api keys. You c
 
 Running:
 
-* locally: dev_appserver.py .
+* locally: dev_appserver.py --host 0.0.0.0 --port 54321 .
 * deployment: appcfg.py update .
 

@@ -6,6 +6,7 @@ import com.googlecode.androidannotations.annotations.rest.Rest;
 import com.googlecode.androidannotations.api.rest.MediaType;
 
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
+import org.springframework.web.client.RestTemplate;
 
 @Rest(rootUrl = Constants.ROOT_URL, converters = {
         GsonHttpMessageConverter.class
@@ -18,4 +19,9 @@ public interface KnurekRestClient {
 
     @Get("/api/auth/?identifier={identifier}")
     Auth getUsername(String identifier);
+
+    RestTemplate getRestTemplate();
+
+    void setRestTemplate(RestTemplate restTemplate);
+
 }

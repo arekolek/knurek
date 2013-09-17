@@ -9,9 +9,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.github.arekolek.knurek.R;
+import com.googlecode.androidannotations.annotations.AfterInject;
 import com.googlecode.androidannotations.annotations.Background;
 import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EActivity;
@@ -24,6 +27,8 @@ import org.springframework.web.client.RestClientException;
 
 @EActivity(R.layout.activity_login)
 public class AuthenticatorActivity extends AccountAuthenticatorActivity {
+
+    private static final String TAG = "AuthenticatorActivity";
 
     public static Intent intent(Context context, AccountAuthenticatorResponse response) {
         Intent intent = AuthenticatorActivity_.intent(context).get();
@@ -45,6 +50,11 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
     @ViewById
     View step2;
+
+    @AfterInject
+    void initClient() {
+        RestUtils.setClientTimeout(client, 2000);
+    }
 
     @Override
     protected void onResume() {
@@ -98,8 +108,13 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
     @Background
     void getIdentifier() {
-        Auth auth = client.getIdentifier();
-        setIdentifier(auth.identifier);
+        try {
+            Auth auth = client.getIdentifier();
+            setIdentifier(auth.identifier);
+        } catch (RestClientException e) {
+            Log.e(TAG, "Connection error in getIdentifier", e);
+            showError(RestUtils.getErrorMessage(e));
+        }
     }
 
     @UiThread
@@ -108,10 +123,15 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         showView(step1);
     }
 
+    @UiThread
+    void showError(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+        finish();
+    }
+
     @Click(R.id.submit)
     void onSubmit() {
-        Uri uri = Uri.parse("http://192.168.1.2:8080/api/auth/?identifier=" +
-                identifier);
+        Uri uri = Uri.parse(Constants.ROOT_URL + "/api/auth/?identifier=" + identifier);
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(intent);
     }
