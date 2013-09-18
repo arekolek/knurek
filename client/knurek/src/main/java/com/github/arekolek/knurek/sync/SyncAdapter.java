@@ -31,6 +31,8 @@ import java.util.List;
 @EBean
 public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
+    private static final String TAG = "SyncAdapter";
+
     @RestService
     FriendsClient client;
 
@@ -39,9 +41,6 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
     @Bean
     CustomHeaderInterceptor authorizer;
-
-    @Bean
-    AvatarDownloader downloader;
 
     public SyncAdapter(Context context) {
         super(context, true);
@@ -59,21 +58,22 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             ContentProviderClient provider, SyncResult syncResult) {
         try {
 
-            Log.v("SYNC", String.format("account=%s, extras=%s, authority=%s", account.toString(),
-                    extras.toString(), authority));
+            Log.v("SYNC",
+                    String.format("account=%s, extras=%s, authority=%s", account.toString(),
+                            extras.toString(), authority));
 
             String name = account.name;
             String type = account.type;
-
-            ContactManager manager = new ContactManager(name, type);
 
             Uri contactsUri = ContactsContract.RawContacts.CONTENT_URI.buildUpon()
                     .appendQueryParameter(ContactsContract.RawContacts.ACCOUNT_NAME, name)
                     .appendQueryParameter(ContactsContract.RawContacts.ACCOUNT_TYPE, type).build();
 
             Cursor contacts = provider.query(contactsUri, new String[] {
-                    ContactsContract.RawContacts._ID
+                ContactsContract.RawContacts._ID
             }, null, null, null);
+
+            ContactManager manager = new ContactManager(name, type, provider);
 
             try {
                 while (contacts.moveToNext()) {
@@ -87,12 +87,19 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
             FriendList list = client.getFriends();
 
+            Log.d(TAG, String.format("Downloaded %d friends", list.friends.size()));
+
             for (Friend friend : list.friends) {
-                // TODO downloader.downloadAvatar(friend.image)
-                manager.addContact(friend.getDisplayName(), null);
+                Log.d(TAG, String.format("Adding\t%s", friend.name));
+                byte[] avatar = null;
+                if (friend.image) {
+                    Log.d(TAG, String.format("Downloading avatar for %s", friend.getDisplayName()));
+                    avatar = client.getAvatar(friend.name);
+                }
+                manager.addContact(friend.getDisplayName(), avatar);
             }
 
-            manager.apply(provider);
+            manager.apply();
         } catch (RemoteException e) {
             e.printStackTrace();
         } catch (OperationApplicationException e) {

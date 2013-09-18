@@ -1,6 +1,6 @@
 
-from google.appengine.ext import db
-from google.appengine.api import urlfetch
+from google.appengine.ext import db, deferred
+from google.appengine.api import urlfetch, images
 
 from lib import pylast
 
@@ -9,6 +9,19 @@ from src.model import Friend, Knurek
 import logging
 
 FETCH_LIMIT = 1000
+
+
+def fetch_avatar(key, url):
+    friend = Friend.get(key)
+    logging.debug('downloading {0}'.format(friend.name))
+    original = urlfetch.Fetch(url).content
+    im = images.Image(original)
+    w = float(im.width)
+    h = float(im.height)
+    im.crop(0., 0., min(1., h/w), min(1.0, w/h))
+    friend.image = db.Blob(im.execute_transforms(output_encoding=images.JPEG))
+    friend.put()
+
 
 def fetch_from_lastfm(identifier):
     user = Knurek.get_by_id(identifier)
@@ -20,8 +33,9 @@ def fetch_from_lastfm(identifier):
             friend = Friend.get_or_insert(key_name=f.get_name(), parent=user)
             friend.name = f.get_name()
             friend.real_name = f.get_real_name()
-            if f.get_image():
-                friend.image = db.Blob(urlfetch.Fetch(f.get_image()).content)
             friend.put()
-
+            logging.debug('added {0}'.format(friend.name))
+            if f.get_image():
+                logging.debug('queuing for download {0}'.format(friend.name))
+                deferred.defer(fetch_avatar, friend.key(), f.get_image())
 

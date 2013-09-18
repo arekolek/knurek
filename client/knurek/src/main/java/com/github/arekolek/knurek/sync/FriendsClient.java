@@ -17,6 +17,9 @@ public interface FriendsClient {
     @Get("/api/friends/")
     FriendList getFriends();
 
+    @Get("/api/friends/{friend}")
+    byte[] getAvatar(String friend);
+
     RestTemplate getRestTemplate();
 
     void setRestTemplate(RestTemplate restTemplate);

@@ -19,13 +19,20 @@ public class ContactManager {
 
     private ArrayList<ContentProviderOperation> ops;
 
-    public ContactManager(String name, String type) {
+    private ContentProviderClient provider;
+
+    private int avatarCount;
+
+    public ContactManager(String name, String type, ContentProviderClient provider) {
         this.name = name;
         this.type = type;
+        this.provider = provider;
         this.ops = new ArrayList<ContentProviderOperation>();
+        this.avatarCount = 0;
     }
 
-    public void addContact(String displayName, byte[] avatar) {
+    public void addContact(String displayName, byte[] avatar) throws RemoteException,
+            OperationApplicationException {
         ContentProviderOperation.Builder op = ContentProviderOperation
                 .newInsert(syncUri(ContactsContract.RawContacts.CONTENT_URI))
                 .withValue(ContactsContract.RawContacts.ACCOUNT_TYPE, type)
@@ -35,8 +42,10 @@ public class ContactManager {
         int backref = ops.size() - 1;
 
         if (avatar != null) {
+            ++avatarCount;
 
-            op = ContentProviderOperation.newInsert(syncUri(ContactsContract.Data.CONTENT_URI))
+            op = ContentProviderOperation
+                    .newInsert(syncUri(ContactsContract.Data.CONTENT_URI))
                     .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, backref)
                     .withValue(ContactsContract.Data.MIMETYPE,
                             ContactsContract.CommonDataKinds.Photo.CONTENT_ITEM_TYPE)
@@ -46,7 +55,8 @@ public class ContactManager {
 
         }
 
-        op = ContentProviderOperation.newInsert(syncUri(ContactsContract.Data.CONTENT_URI))
+        op = ContentProviderOperation
+                .newInsert(syncUri(ContactsContract.Data.CONTENT_URI))
                 .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, backref)
                 .withValue(ContactsContract.Data.MIMETYPE,
                         ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
@@ -54,19 +64,24 @@ public class ContactManager {
                         displayName);
         op.withYieldAllowed(true);
         ops.add(op.build());
+
+        if (avatarCount > 5) {
+            apply();
+        }
     }
 
     public void deleteContact(long id) {
-        ContentProviderOperation.Builder op = ContentProviderOperation.newDelete(
-                syncUri(ContentUris.withAppendedId(ContactsContract.RawContacts.CONTENT_URI, id)));
+        ContentProviderOperation.Builder op = ContentProviderOperation
+                .newDelete(syncUri(ContentUris.withAppendedId(
+                        ContactsContract.RawContacts.CONTENT_URI, id)));
         op.withYieldAllowed(true);
         ops.add(op.build());
     }
 
-    public void apply(ContentProviderClient provider)
-            throws OperationApplicationException, RemoteException {
+    public void apply() throws OperationApplicationException, RemoteException {
         provider.applyBatch(ops);
         ops.clear();
+        avatarCount = 0;
     }
 
     private Uri syncUri(Uri uri) {

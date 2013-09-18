@@ -8,6 +8,9 @@ handlers:
 - url: /api/friends/
   script: src.friends.app
 
+- url: /api/friends/.*
+  script: src.avatar.app
+
 - url: /api/auth/
   script: src.auth.app
 
