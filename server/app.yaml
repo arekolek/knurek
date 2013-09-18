@@ -10,3 +10,7 @@ handlers:
 
 - url: /api/auth/
   script: src.auth.app
+
+builtins:
+- deferred: on
+

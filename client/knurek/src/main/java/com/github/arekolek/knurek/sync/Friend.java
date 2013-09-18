@@ -5,16 +5,16 @@ import android.text.TextUtils;
 
 public class Friend {
 
-    String realname;
+    String real_name;
 
     String name;
 
-    String image;
+    boolean image;
 
     public String getDisplayName() {
-        if (TextUtils.isEmpty(realname)) {
+        if (TextUtils.isEmpty(real_name)) {
             return name;
         }
-        return realname;
+        return real_name;
     }
 }
