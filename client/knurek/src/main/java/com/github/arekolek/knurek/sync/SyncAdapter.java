@@ -40,6 +40,9 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     @Bean
     CustomHeaderInterceptor authorizer;
 
+    @Bean
+    AvatarDownloader downloader;
+
     public SyncAdapter(Context context) {
         super(context, true);
     }
@@ -85,6 +88,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             FriendList list = client.getFriends();
 
             for (Friend friend : list.friends) {
+                // TODO downloader.downloadAvatar(friend.image)
                 manager.addContact(friend.getDisplayName(), null);
             }
 
