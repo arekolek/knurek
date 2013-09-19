@@ -4,13 +4,12 @@ import json
 
 from google.appengine.ext import deferred
 
-from src import friends_import
-from src.model import Friend, Knurek
+from src import friends_import, model
 
 class FriendsPage(webapp2.RequestHandler):
     
     def get_friends(self, user):
-        friends = Friend.all().ancestor(user.key())
+        friends = model.Friend.all().ancestor(user.key())
         output = {'friends': [{
                     'name': f.name,
                     'real_name': f.real_name,
@@ -22,7 +21,7 @@ class FriendsPage(webapp2.RequestHandler):
     
     def get(self):
         identifier = int(self.request.headers['Identifier'])
-        user = Knurek.get_by_id(identifier)
+        user = model.Knurek.get_by_id(identifier)
         if user and user.session:
             self.get_friends(user)
         deferred.defer(friends_import.fetch_from_lastfm, identifier)

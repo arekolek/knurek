@@ -5,12 +5,12 @@ from google.appengine.ext import deferred
 from lib import pylast
 from src import friends_import
 from src.lastapikeys import API_KEY, API_SECRET
-from src.model import Knurek
+from src import model
 
 
 class AuthPage(webapp2.RequestHandler):
     def create_new_user(self):
-        key = Knurek(active=False).put()
+        key = model.Knurek(active=False).put()
         
         self.response.headers['Content-Type'] = 'application/json'
         self.response.write(json.dumps({"identifier": key.id()}))
@@ -53,7 +53,7 @@ class AuthPage(webapp2.RequestHandler):
     def get(self):
         if 'identifier' in self.request.GET:
             identifier = int(self.request.GET['identifier'])
-            user = Knurek.get_by_id(identifier)
+            user = model.Knurek.get_by_id(identifier)
             if user == None:
                 self.handle_not_found(identifier)
             else:
