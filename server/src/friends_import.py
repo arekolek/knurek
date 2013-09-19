@@ -1,18 +1,19 @@
 
+import logging
+
 from google.appengine.ext import db, deferred
 from google.appengine.api import urlfetch, images
 
 from lib import pylast
 
 from src.lastapikeys import API_KEY, API_SECRET
-from src.model import Friend, Knurek
-import logging
+from src import model
 
 FETCH_LIMIT = 1000
 
 
 def fetch_avatar(key, url):
-    friend = Friend.get(key)
+    friend = model.Friend.get(key)
     logging.debug('downloading {0}'.format(friend.name))
     original = urlfetch.Fetch(url).content
     im = images.Image(original)
@@ -23,16 +24,17 @@ def fetch_avatar(key, url):
     friend.put()
 
 
-def fetch_from_lastfm(identifier):
-    user = Knurek.get_by_id(identifier)
-    if user and user.session:
-        logging.info('import friends for user {0}'.format(user.name))
+def fetch_from_lastfm(key):
+    account = model.Account.get(key)
+    if account:
+        logging.info('import friends for user {0}'.format(account.name))
         network = pylast.LastFMNetwork(api_key=API_KEY, api_secret=API_SECRET)
-        friends = network.get_user(user.name).get_friends(limit=FETCH_LIMIT)
+        friends = network.get_user(account.name).get_friends(limit=FETCH_LIMIT)
         for f in friends:
-            friend = Friend.get_or_insert(key_name=f.get_name(), parent=user)
+            friend = model.Friend.get_or_insert(key_name=f.get_name(), parent=account)
             friend.name = f.get_name()
             friend.real_name = f.get_real_name()
+            friend.account = account
             friend.put()
             logging.debug('added {0}'.format(friend.name))
             if f.get_image():

@@ -8,8 +8,8 @@ from src import friends_import, model
 
 class FriendsPage(webapp2.RequestHandler):
     
-    def get_friends(self, user):
-        friends = model.Friend.all().ancestor(user.key())
+    def get_friends(self, account):
+        friends = account.friends
         output = {'friends': [{
                     'name': f.name,
                     'real_name': f.real_name,
@@ -21,10 +21,10 @@ class FriendsPage(webapp2.RequestHandler):
     
     def get(self):
         identifier = int(self.request.headers['Identifier'])
-        user = model.Knurek.get_by_id(identifier)
-        if user and user.session:
-            self.get_friends(user)
-        deferred.defer(friends_import.fetch_from_lastfm, identifier)
+        device = model.Device.get_by_id(identifier)
+        if device:
+            self.get_friends(device.account)
+            deferred.defer(friends_import.fetch_from_lastfm, device.account.key())
 
 
 app = webapp2.WSGIApplication([('/api/friends/', FriendsPage)],

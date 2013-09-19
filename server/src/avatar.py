@@ -8,9 +8,9 @@ class AvatarPage(webapp2.RequestHandler):
     
     def get(self, friend_name):
         identifier = int(self.request.headers['Identifier'])
-        user = model.Knurek.get_by_id(identifier)
-        if user and user.session:
-            friend = model.Friend.get_by_key_name(friend_name, user)
+        device = model.Device.get_by_id(identifier)
+        if device:
+            friend = device.account.friends.filter('name = ', friend_name).get()
             if friend:
                 self.response.headers['Content-Type'] = 'image/jpeg'
                 self.response.write(friend.image)

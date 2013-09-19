@@ -9,60 +9,66 @@ from src import model
 
 
 class AuthPage(webapp2.RequestHandler):
-    def create_new_user(self):
-        key = model.Knurek(active=False).put()
+    def new_device(self):
+        key = model.Device().put()
         
         self.response.headers['Content-Type'] = 'application/json'
         self.response.write(json.dumps({"identifier": key.id()}))
         
 
-    def handle_authentication(self, user, identifier):
-        network = pylast.LastFMNetwork(api_key=API_KEY,api_secret=API_SECRET)
+    def authenticate_device(self, device, identifier):
+        network = pylast.LastFMNetwork(api_key=API_KEY, api_secret=API_SECRET)
         keyGen = pylast.SessionKeyGenerator(network)
         if 'token' not in self.request.GET:
             # redirect to api auth with callback here
-            callback = 'http://{0}/api/auth/?identifier={1}'.format(self.request.headers['Host'], identifier) 
+            callback = '{0}?identifier={1}'.format(self.request.path_url, identifier) 
             self.redirect(keyGen.get_web_auth_url(callback))
         else:
             # get session
             # show a webpage telling to close the browser
+            # import contacts
             token = self.request.GET['token']
             result = keyGen.get_web_auth_session_key(token)
-            user.name = result['name']
-            user.session = result['key']
-            user.put()
+            
+            account = model.Account.get_or_insert(key_name=result['name'])
+            account.name = result['name']
+            account.session = result['key']
+            account.put()
+            
+            device.account = account
+            device.put()
             
             self.response.headers['Content-Type'] = 'text/html'
-            self.response.write('<html><body>Well done ' + user.name + '. You can now go back to the app.</body></html>')
+            self.response.write('<html><body>Well done ' + account.name + '. You can now go back to the app.</body></html>')
             
-            deferred.defer(friends_import.fetch_from_lastfm, identifier)
+            deferred.defer(friends_import.fetch_from_lastfm, account.key())
     
     
-    def get_existing_user(self, user):
-        user.active = True
-        user.put()
+    def activate_device(self, device):
+        device.active = True
+        device.put()
         
         self.response.headers['Content-Type'] = 'application/json'
-        self.response.write(json.dumps({"name": user.name}))
+        self.response.write(json.dumps({"name": device.account.name}))
     
     
     def handle_not_found(self, identifier):
-        self.response.write('No such user')
+        self.response.write('No such device')
     
     
     def get(self):
         if 'identifier' in self.request.GET:
             identifier = int(self.request.GET['identifier'])
-            user = model.Knurek.get_by_id(identifier)
-            if user == None:
-                self.handle_not_found(identifier)
-            else:
-                if user.session == None:
-                    self.handle_authentication(user, identifier)
+            device = model.Device.get_by_id(identifier)
+            if device:
+                if device.account:
+                    self.activate_device(device)
                 else:
-                    self.get_existing_user(user)
+                    self.authenticate_device(device, identifier)
+            else:
+                self.handle_not_found(identifier)
         else:
-            self.create_new_user()
+            self.new_device()
         
 
 app = webapp2.WSGIApplication([('/api/auth/', AuthPage)],
