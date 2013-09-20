@@ -2810,7 +2810,10 @@ class User(_BaseObject):
     def get_real_name(self, properly_capitalized=False):
         """Returns the user full name."""
         
-        return _extract(self._request("user.getInfo", True), "realname")
+        if self.real_name == None:
+            self.real_name = _extract(self._request("user.getInfo", True), "realname")
+        
+        return None if not self.real_name else self.real_name
     
     def get_upcoming_events(self):
         """Returns all the upcoming events for this user. """
@@ -2830,7 +2833,12 @@ class User(_BaseObject):
         
         seq = []
         for node in _collect_nodes(limit, self, "user.getFriends", False):
-            seq.append(User(_extract(node, "name"), self.network))
+            user = User(_extract(node, "name"), self.network)
+            user.real_name = _extract(node, "realname")
+            user.real_name = False if user.real_name == None else user.real_name
+            user.image = _extract(node, "image", 3)
+            user.image = False if user.image == None else user.image
+            seq.append(user)
         
         return seq
     
@@ -3197,9 +3205,10 @@ class User(_BaseObject):
     def get_image(self):
         """Returns the user's avatar."""
             
-        doc = self._request("user.getInfo", True)
+        if self.image == None:
+            self.image = _extract(self._request("user.getInfo", True), "image", 3)
         
-        return _extract(doc, "image", 3)
+        return None if not self.image else self.image
     
     def get_url(self, domain_name = DOMAIN_ENGLISH):
         """Returns the url of the user page on the network. 
