@@ -30,6 +30,21 @@ def fetch_avatars(keys):
     db.put(friends)
 
 
+def update(friend, f):
+    changed = False
+    if friend.real_name != f.get_real_name():
+        friend.real_name = f.get_real_name()
+        changed = True 
+    if friend.image_url != f.get_image():
+        friend.image_url = f.get_image()
+        changed = True
+    return changed
+
+
+def get_friend(f, a):
+    return model.Friend.get_or_insert(key_name=f.get_name(), parent=a, account=a, name=f.get_name())
+
+
 def fetch_from_lastfm(key):
     account = model.Account.get(key)
     if account:
@@ -37,16 +52,14 @@ def fetch_from_lastfm(key):
         network = pylast.LastFMNetwork(api_key=API_KEY, api_secret=API_SECRET)
         friends = network.get_user(account.name).get_friends(limit=FETCH_LIMIT)
         updated = []
-        for f in friends:
-            friend = model.Friend.get_or_insert(key_name=f.get_name(), parent=account)
-            friend.name = f.get_name()
-            friend.real_name = f.get_real_name()
-            friend.image_url = f.get_image()
-            friend.account = account
-            updated.append(friend)
-            logging.info('appended {0}'.format(friend.name))
-        logging.info('saving {0} records'.format(len(updated)))
+        for lfmf in friends:
+            friend = get_friend(lfmf, account)
+            changed = update(friend, lfmf)
+            if changed:
+                updated.append(friend)
+                logging.info('updating {0}'.format(friend.name))
         if updated:
+            logging.info('saving {0} records'.format(len(updated)))
             db.put(updated)
             needUpdate = []
             for f in updated:
