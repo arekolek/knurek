@@ -4,7 +4,7 @@ import json
 
 from google.appengine.ext import deferred
 
-from src import friends_import, model
+from src import friends_import, model, auth
 
 class FriendsPage(webapp2.RequestHandler):
     
@@ -20,7 +20,7 @@ class FriendsPage(webapp2.RequestHandler):
     
     
     def get(self):
-        identifier = int(self.request.headers['Identifier'])
+        identifier = auth.get_int('identifier', self.request)
         device = model.Device.get_by_id(identifier)
         if device:
             self.get_friends(device.account)

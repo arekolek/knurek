@@ -8,6 +8,13 @@ from src.lastapikeys import API_KEY, API_SECRET
 from src import model
 
 
+def get_int(key, request):
+    if key in request.headers:
+        return int(request.headers[key])
+    else:
+        return int(request.get(key))
+
+
 class AuthPage(webapp2.RequestHandler):
     def new_device(self):
         key = model.Device().put()
@@ -58,7 +65,7 @@ class AuthPage(webapp2.RequestHandler):
     
     def get(self):
         if 'identifier' in self.request.GET:
-            identifier = int(self.request.GET['identifier'])
+            identifier = get_int('identifier', self.request)
             device = model.Device.get_by_id(identifier)
             if device:
                 if device.account:

@@ -2,12 +2,12 @@
 import webapp2
 import logging
 
-from src import model
+from src import model, auth
 
 class AvatarPage(webapp2.RequestHandler):
     
     def get(self, friend_name):
-        identifier = int(self.request.headers['Identifier'])
+        identifier = auth.get_int('identifier', self.request)
         device = model.Device.get_by_id(identifier)
         if device:
             friend = device.account.friends.filter('name = ', friend_name).get()
