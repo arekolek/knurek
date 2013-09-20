@@ -20,6 +20,6 @@ class AvatarPage(webapp2.RequestHandler):
             logging.error('user not found')
 
 
-app = webapp2.WSGIApplication([('/api/friends/(.*)', AvatarPage)],
+app = webapp2.WSGIApplication([('/api/friends/(.*)/avatar', AvatarPage)],
                               debug=True)
 
