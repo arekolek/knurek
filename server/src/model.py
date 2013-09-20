@@ -1,5 +1,10 @@
 
+import time
 from google.appengine.ext import db
+
+
+def timestamp():
+    return int(time.time())
 
 
 class Account(db.Model):
@@ -18,4 +23,6 @@ class Friend(db.Model):
     image_url = db.URLProperty(default=None)
     image = db.BlobProperty(default=None)
     account = db.ReferenceProperty(Account, collection_name='friends')
+    created = db.DateTimeProperty(auto_now_add=True)
+    updated = db.DateTimeProperty(auto_now=True)
 

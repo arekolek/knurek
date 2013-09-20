@@ -42,7 +42,8 @@ def update(friend, f):
 
 
 def get_friend(f, a):
-    return model.Friend.get_or_insert(key_name=f.get_name(), parent=a, account=a, name=f.get_name())
+    return model.Friend.get_or_insert(key_name=f.get_name(), parent=a, 
+                                      account=a, name=f.get_name())
 
 
 def fetch_from_lastfm(key):
@@ -54,8 +55,7 @@ def fetch_from_lastfm(key):
         updated = []
         for lfmf in friends:
             friend = get_friend(lfmf, account)
-            changed = update(friend, lfmf)
-            if changed:
+            if update(friend, lfmf):
                 updated.append(friend)
                 logging.info('updating {0}'.format(friend.name))
         if updated:
