@@ -1,10 +1,9 @@
 
-import time
 from google.appengine.ext import db
 
 
-def timestamp():
-    return int(time.time())
+def timestamp(t):
+    return float(t.strftime('%s.%f'))
 
 
 class Account(db.Model):
@@ -25,4 +24,10 @@ class Friend(db.Model):
     account = db.ReferenceProperty(Account, collection_name='friends')
     created = db.DateTimeProperty(auto_now_add=True)
     updated = db.DateTimeProperty(auto_now=True)
-
+    deleted = db.BooleanProperty(default=False)
+    
+    def soft_delete(self, save = True):
+        self.deleted = True
+        if save:
+            self.put()
+    

@@ -6,13 +6,26 @@ from lib import pylast
 from src import friends_import
 from src.lastapikeys import API_KEY, API_SECRET
 from src import model
+from datetime import datetime
+
+
+def get_param(key, request):
+    return request.headers[key] if key in request.headers else request.get(key) 
 
 
 def get_int(key, request):
-    if key in request.headers:
-        return int(request.headers[key])
-    else:
-        return int(request.get(key))
+    value = get_param(key, request)
+    return int(value) if value else None
+
+
+def get_float(key, request):
+    value = get_param(key, request)
+    return float(value) if value else None
+
+
+def get_datetime(key, request):
+    value = get_float(key, request)
+    return datetime.fromtimestamp(value) if value else None
 
 
 class AuthPage(webapp2.RequestHandler):
