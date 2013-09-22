@@ -52,14 +52,24 @@ def fetch_from_lastfm(key):
         logging.info('import friends for user {0}'.format(account.name))
         network = pylast.LastFMNetwork(api_key=API_KEY, api_secret=API_SECRET)
         friends = network.get_user(account.name).get_friends(limit=FETCH_LIMIT)
+        
+        friend_names = {f.name for f in friends}
+        deleted = []
+        for friend in account.friends:
+            if friend.name not in friend_names:
+                friend.soft_delete(False)
+                deleted.push_back(friend)
+        logging.info('soft deleting {0} friends'.format(len(deleted)))
+        db.put(deleted)
+        
         updated = []
         for lfmf in friends:
             friend = get_friend(lfmf, account)
             if update(friend, lfmf):
                 updated.append(friend)
                 logging.info('updating {0}'.format(friend.name))
+        logging.info('updating {0} friends'.format(len(updated)))
         if updated:
-            logging.info('saving {0} records'.format(len(updated)))
             db.put(updated)
             needUpdate = []
             for f in updated:
@@ -69,4 +79,4 @@ def fetch_from_lastfm(key):
             if needUpdate:
                 logging.info('deferring download task')
                 deferred.defer(fetch_avatars, needUpdate)
-
+        

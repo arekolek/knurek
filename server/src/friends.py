@@ -51,7 +51,7 @@ class FriendsPage(webapp2.RequestHandler):
         device = model.Device.get_by_id(identifier)
         if device:
             self.get_friends(device.account, last, now)
-            #deferred.defer(friends_import.fetch_from_lastfm, device.account.key())
+            deferred.defer(friends_import.fetch_from_lastfm, device.account.key())
 
 
 app = webapp2.WSGIApplication([('/api/friends/', FriendsPage)],
