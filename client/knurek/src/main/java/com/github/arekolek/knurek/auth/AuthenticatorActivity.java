@@ -5,9 +5,11 @@ import android.accounts.Account;
 import android.accounts.AccountAuthenticatorActivity;
 import android.accounts.AccountAuthenticatorResponse;
 import android.accounts.AccountManager;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -101,13 +103,14 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
     @UiThread
     void setUsername(String name) {
-        String type = Constants.ACCOUNT_TYPE;
-
-        AccountManager.get(this).addAccountExplicitly(new Account(name, type), identifier, null);
+        final Account account = new Account(name, Constants.ACCOUNT_TYPE);
+        AccountManager.get(this).addAccountExplicitly(account, identifier, null);
+        // Set contacts sync for this account.
+        ContentResolver.setSyncAutomatically(account, ContactsContract.AUTHORITY, true);
 
         Intent intent = new Intent();
         intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, name);
-        intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, type);
+        intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, Constants.ACCOUNT_TYPE);
         setAccountAuthenticatorResult(intent.getExtras());
         setResult(RESULT_OK, intent);
 
