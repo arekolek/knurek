@@ -89,15 +89,22 @@
             <Type type="mobile" />
             <Type type="custom" />
         </DataKind>
+    </EditSchema>
 
-        <!--
+    <ContactsDataKind
+        android:detailColumn="data3"
+        android:detailSocialSummary="true"
+        android:icon="@drawable/ic_launcher"
+        android:mimeType="vnd.android.cursor.item/vnd.knurek.profile"
+        android:summaryColumn="data2" />
+
+    <!--
             Nickname
             - maxOccurs must be 1
             - No types.
-        -->
-        <DataKind
-            kind="nickname"
-            maxOccurs="1" />
-    </EditSchema>
+    -->
+    <DataKind
+        kind="nickname"
+        maxOccurs="1" />
 
 </ContactsAccountType>
