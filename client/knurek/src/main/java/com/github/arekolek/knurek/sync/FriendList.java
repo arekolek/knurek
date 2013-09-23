@@ -5,6 +5,12 @@ import java.util.List;
 
 public class FriendList {
 
-    List<Friend> friends;
+    List<Friend> created;
+
+    List<Friend> updated;
+
+    List<Friend> deleted;
+
+    String timestamp;
 
 }

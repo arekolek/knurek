@@ -3,7 +3,7 @@ from google.appengine.ext import db
 
 
 def timestamp(t):
-    return float(t.strftime('%s.%f'))
+    return t.strftime('%s.%f')
 
 
 class Account(db.Model):

@@ -87,9 +87,11 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
             FriendList list = client.getFriends();
 
-            Log.d(TAG, String.format("Downloaded %d friends", list.friends.size()));
+            Log.d(TAG, String.format("Downloaded %d created", list.created.size()));
+            Log.d(TAG, String.format("Downloaded %d updated", list.updated.size()));
+            Log.d(TAG, String.format("Downloaded %d deleted", list.deleted.size()));
 
-            for (Friend friend : list.friends) {
+            for (Friend friend : list.created) {
                 Log.d(TAG, String.format("Adding\t%s", friend.name));
                 byte[] avatar = null;
                 if (friend.image) {
