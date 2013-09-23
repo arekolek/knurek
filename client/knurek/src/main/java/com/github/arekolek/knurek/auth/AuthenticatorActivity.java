@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.github.arekolek.knurek.R;
+import com.github.arekolek.knurek.sync.CustomHeaderInterceptor;
 import com.googlecode.androidannotations.annotations.AfterInject;
 import com.googlecode.androidannotations.annotations.Background;
 import com.googlecode.androidannotations.annotations.Click;
@@ -23,7 +24,11 @@ import com.googlecode.androidannotations.annotations.UiThread;
 import com.googlecode.androidannotations.annotations.ViewById;
 import com.googlecode.androidannotations.annotations.rest.RestService;
 
+import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.web.client.RestClientException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @EActivity(R.layout.activity_login)
 public class AuthenticatorActivity extends AccountAuthenticatorActivity {
@@ -54,6 +59,9 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     @AfterInject
     void initClient() {
         RestUtils.setClientTimeout(client, 2000);
+        List<ClientHttpRequestInterceptor> interceptors = new ArrayList<ClientHttpRequestInterceptor>();
+        interceptors.add(new CustomHeaderInterceptor());
+        client.getRestTemplate().setInterceptors(interceptors);
     }
 
     @Override
