@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.Email;
 import android.provider.ContactsContract.CommonDataKinds.GroupMembership;
+import android.provider.ContactsContract.CommonDataKinds.Nickname;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.ContactsContract.CommonDataKinds.Photo;
 import android.provider.ContactsContract.CommonDataKinds.StructuredName;
@@ -129,6 +130,18 @@ public class ContactOperations {
             }
         }
         if (mValues.size() > 0) {
+            addInsertOp();
+        }
+        return this;
+    }
+
+    public ContactOperations addNickname(String nickname) {
+        mValues.clear();
+        if (!TextUtils.isEmpty(nickname)) {
+            mValues.put(Nickname.NAME, nickname);
+            mValues.put(Nickname.TYPE, Nickname.TYPE_CUSTOM);
+            mValues.put(Nickname.LABEL, "Last.fm nick");
+            mValues.put(Nickname.MIMETYPE, Nickname.CONTENT_ITEM_TYPE);
             addInsertOp();
         }
         return this;

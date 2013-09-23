@@ -186,6 +186,7 @@ public class ContactManager {
                 rawContact.getServerContactId(), accountName, inSync, batchOperation);
 
         contactOp
+                .addNickname(rawContact.getServerContactId())
                 .addName(rawContact.getFullName(), rawContact.getFirstName(),
                         rawContact.getLastName()).addEmail(rawContact.getEmail())
                 .addPhone(rawContact.getCellPhone(), Phone.TYPE_MOBILE)
