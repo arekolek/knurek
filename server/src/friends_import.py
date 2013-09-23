@@ -33,12 +33,14 @@ def fetch_avatars(keys):
 
 def update(friend, f):
     changed = False
+    # TODO add-friend sync remove-friend add-friend sync - might result in a duplicate on phone
     if friend.deleted:
         friend.created = datetime.now()
         friend.deleted = False
         changed = True
-    if friend.real_name != f.get_real_name():
-        friend.real_name = f.get_real_name()
+    if friend.original_real_name != f.get_real_name():
+        friend.original_real_name = f.get_real_name()
+        friend.real_name = friend.original_real_name
         changed = True 
     if friend.image_url != f.get_image():
         friend.image_url = f.get_image()

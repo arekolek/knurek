@@ -81,11 +81,11 @@ public class ContactManager {
                 if (isDeleted) {
                     Log.i(TAG, "Contact is marked for deletion");
                     Friend friend = Friend.createDeletedContact(rawContactId, serverContactId);
-                    dirtyContacts.add(friend);
+                    dirtyContacts.addDeleted(friend);
                 } else if (isDirty) {
                     Friend rawContact = getRawContact(context, rawContactId);
                     Log.i(TAG, "Contact Name: " + rawContact.getBestName());
-                    dirtyContacts.add(rawContact);
+                    dirtyContacts.addUpdated(rawContact);
                 }
             }
 
@@ -153,14 +153,13 @@ public class ContactManager {
         Log.i(TAG, "*** Clearing Sync-related Flags");
         final ContentResolver resolver = context.getContentResolver();
         final BatchOperation batchOperation = new BatchOperation(context, resolver);
-        for (Friend rawContact : dirtyContacts.get()) {
-            if (rawContact.isDeleted()) {
-                Log.i(TAG, "Deleting contact: " + Long.toString(rawContact.getRawContactId()));
-                deleteContact(context, rawContact.getRawContactId(), batchOperation);
-            } else if (rawContact.isDirty()) {
-                Log.i(TAG, "Clearing dirty flag for: " + rawContact.getBestName());
-                clearDirtyFlag(context, rawContact.getRawContactId(), batchOperation);
-            }
+        for (Friend rawContact : dirtyContacts.updated) {
+            Log.i(TAG, "Clearing dirty flag for: " + rawContact.getBestName());
+            clearDirtyFlag(context, rawContact.getRawContactId(), batchOperation);
+        }
+        for (Friend rawContact : dirtyContacts.deleted) {
+            Log.i(TAG, "Deleting contact: " + Long.toString(rawContact.getRawContactId()));
+            deleteContact(context, rawContact.getRawContactId(), batchOperation);
         }
         batchOperation.execute();
     }

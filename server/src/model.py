@@ -18,6 +18,7 @@ class Device(db.Model):
 
 class Friend(db.Model):
     name = db.StringProperty()
+    original_real_name = db.StringProperty()
     real_name = db.StringProperty()
     image_url = db.URLProperty(default=None)
     image = db.BlobProperty(default=None)

@@ -6,18 +6,19 @@ import java.util.List;
 
 public class DirtyFriends {
 
-    List<Friend> list = new ArrayList<Friend>();
+    List<Friend> deleted = new ArrayList<Friend>();
+    List<Friend> updated = new ArrayList<Friend>();
 
-    public void add(Friend friend) {
-        list.add(friend);
+    public void addDeleted(Friend friend) {
+        deleted.add(friend);
     }
 
     public int size() {
-        return list.size();
+        return updated.size() + deleted.size();
     }
 
-    public List<Friend> get() {
-        return list;
+    public void addUpdated(Friend friend) {
+        updated.add(friend);
     }
 
 }

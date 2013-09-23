@@ -11,8 +11,8 @@ public class Friend {
 
     boolean image;
 
-    private String first_name;
-    private String last_name;
+    private transient String first_name;
+    private transient String last_name;
 
     private transient boolean dirty;
     private transient boolean deleted;
