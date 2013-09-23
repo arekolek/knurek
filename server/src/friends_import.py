@@ -8,6 +8,7 @@ from lib import pylast
 
 from src.lastapikeys import API_KEY, API_SECRET
 from src import model
+from datetime import datetime
 
 FETCH_LIMIT = 1000
 
@@ -32,6 +33,10 @@ def fetch_avatars(keys):
 
 def update(friend, f):
     changed = False
+    if friend.deleted:
+        friend.created = datetime.now()
+        friend.deleted = False
+        changed = True
     if friend.real_name != f.get_real_name():
         friend.real_name = f.get_real_name()
         changed = True 
@@ -55,7 +60,7 @@ def fetch_from_lastfm(key):
         
         friend_names = {f.name for f in friends}
         deleted = []
-        for friend in account.friends:
+        for friend in account.friends.filter('deleted == ', False):
             if friend.name not in friend_names:
                 friend.soft_delete(False)
                 deleted.append(friend)
