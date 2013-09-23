@@ -58,7 +58,7 @@ def fetch_from_lastfm(key):
         for friend in account.friends:
             if friend.name not in friend_names:
                 friend.soft_delete(False)
-                deleted.push_back(friend)
+                deleted.append(friend)
         logging.info('soft deleting {0} friends'.format(len(deleted)))
         db.put(deleted)
         

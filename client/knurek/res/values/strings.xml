@@ -9,5 +9,7 @@
         \nYou can later revoke it in your Last.fm settings.</string>
     <string name="auth_login_done">Cool. You are now logged in.</string>
     <string name="auth_login_finish">Thanks</string>
+    <string name="profile_action">Sample profile</string>
+    <string name="view_profile">View Profile</string>
 
 </resources>
