@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.github.arekolek.knurek.R;
+import com.github.arekolek.knurek.sync.ContactManager;
 import com.github.arekolek.knurek.sync.CustomHeaderInterceptor;
 import com.googlecode.androidannotations.annotations.AfterInject;
 import com.googlecode.androidannotations.annotations.Background;
@@ -120,7 +121,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     @Background
     void addMeProfile(String name) {
         // FIXME this causes contacts app to crash when editing 'me'
-        //ContactManager.addProfile(this, name, name);
+        ContactManager.addProfile(this, name, name);
         showView(step2);
     }
 
