@@ -88,14 +88,19 @@ public class ContactOperations {
 
     public ContactOperations(Context context, String userId, String accountName,
             boolean isSyncOperation, BatchOperation batchOperation) {
+        this(context, userId, accountName, isSyncOperation, batchOperation, RawContacts.CONTENT_URI);
+    }
+
+    public ContactOperations(Context context, String userId, String accountName,
+            boolean isSyncOperation, BatchOperation batchOperation, Uri uri) {
         this(context, isSyncOperation, batchOperation);
         mBackReference = mBatchOperation.size();
         mIsNewContact = true;
         mValues.put(RawContacts.SOURCE_ID, userId);
         mValues.put(RawContacts.ACCOUNT_TYPE, Constants.ACCOUNT_TYPE);
         mValues.put(RawContacts.ACCOUNT_NAME, accountName);
-        ContentProviderOperation.Builder builder = newInsertCpo(RawContacts.CONTENT_URI,
-                mIsSyncOperation, true).withValues(mValues);
+        ContentProviderOperation.Builder builder = newInsertCpo(uri, mIsSyncOperation, true)
+                .withValues(mValues);
         mBatchOperation.add(builder.build());
     }
 

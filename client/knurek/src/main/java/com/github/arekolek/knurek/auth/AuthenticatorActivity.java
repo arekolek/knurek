@@ -114,6 +114,13 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         setAccountAuthenticatorResult(intent.getExtras());
         setResult(RESULT_OK, intent);
 
+        addMeProfile(name);
+    }
+
+    @Background
+    void addMeProfile(String name) {
+        // FIXME this causes contacts app to crash when editing 'me'
+        //ContactManager.addProfile(this, name, name);
         showView(step2);
     }
 

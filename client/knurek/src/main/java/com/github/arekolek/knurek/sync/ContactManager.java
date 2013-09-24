@@ -14,6 +14,7 @@ import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.ContactsContract.CommonDataKinds.Photo;
 import android.provider.ContactsContract.CommonDataKinds.StructuredName;
 import android.provider.ContactsContract.Data;
+import android.provider.ContactsContract.Profile;
 import android.provider.ContactsContract.RawContacts;
 import android.provider.ContactsContract.Settings;
 import android.text.TextUtils;
@@ -161,6 +162,28 @@ public class ContactManager {
             Log.i(TAG, "Deleting contact: " + Long.toString(rawContact.getRawContactId()));
             deleteContact(context, rawContact.getRawContactId(), batchOperation);
         }
+        batchOperation.execute();
+    }
+
+    /**
+     * Adds the profile to the platform contacts provider.
+     * 
+     * @param context the Authenticator Activity context
+     * @param accountName the account the contact belongs to
+     * @param rawContact the sample SyncAdapter User object
+     * @param batchOperation allow us to batch together multiple operations into
+     *            a single provider call
+     */
+    public static void addProfile(Context context, String accountName, String nickname) {
+        final ContentResolver resolver = context.getContentResolver();
+        final BatchOperation batchOperation = new BatchOperation(context, resolver);
+
+        // Put the data in the contacts provider
+        final ContactOperations contactOp = new ContactOperations(context, nickname, accountName,
+                true, batchOperation, Profile.CONTENT_RAW_CONTACTS_URI);
+
+        contactOp.addNickname(nickname).addProfileAction(nickname);
+
         batchOperation.execute();
     }
 
