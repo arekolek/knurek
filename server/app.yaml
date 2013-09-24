@@ -5,6 +5,9 @@ api_version: 1
 threadsafe: true
 
 handlers:
+- url: /stylesheets
+  static_dir: static/stylesheets
+
 - url: /api/friends/sync/.*
   script: src.friends.app
 
@@ -14,6 +17,15 @@ handlers:
 - url: /api/auth/
   script: src.auth.app
 
+- url: /.*
+  static_files: static/html/404.html
+  upload: static/html/404.html
+
 builtins:
 - deferred: on
 
+libraries:
+- name: webapp2
+  version: latest
+- name: jinja2
+  version: latest

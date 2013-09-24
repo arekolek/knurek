@@ -1,4 +1,5 @@
-import webapp2, json
+import webapp2, json, os
+import jinja2  # @UnresolvedImport
 
 from google.appengine.ext import deferred
 
@@ -8,6 +9,9 @@ from src.lastapikeys import API_KEY, API_SECRET
 from src import model
 from datetime import datetime
 
+JINJA_ENVIRONMENT = jinja2.Environment(
+    loader=jinja2.FileSystemLoader(os.path.join(os.path.dirname(__file__), '../templates')),
+    extensions=['jinja2.ext.autoescape'])
 
 def get_param(key, request):
     return request.headers[key] if key in request.headers else request.get(key) 
@@ -59,7 +63,8 @@ class AuthPage(webapp2.RequestHandler):
             device.put()
             
             self.response.headers['Content-Type'] = 'text/html'
-            self.response.write('<html><body>Well done ' + account.name + '. You can now go back to the app.</body></html>')
+            template = JINJA_ENVIRONMENT.get_template('finish.html')
+            self.response.write(template.render({'account': account}))
             
             deferred.defer(friends_import.fetch_from_lastfm, account.key())
     

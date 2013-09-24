@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+{% autoescape true %}
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Knurek</title>
+    <meta name="description" content="Last.fm client">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="cleartype" content="on">
+    
+    <link type="text/css" rel="stylesheet" href="/stylesheets/normalize.css" />
+    <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+    <style>
+      #second {
+        display: none;
+      }
+    </style>
+    <script>
+      function hide() {
+        document.getElementById('first').style.display='none';
+        document.getElementById('second').style.display='block';
+      }
+    </script>
+  </head>
+  
+  <body>
+    <div class="container">
+      <div id="first">
+        <h1>Hello {{ account.name }}! <span>:)</span></h1>
+      	<p>You can now go back to the app.</p>
+      	<a class="button" href="knurek:auth/finish"	onclick="hide();">Finish login</a>
+    	</div>
+    	<div id="second">
+    	  <p>You can now close this tab</p>
+    	</div>
+    </div>
+  </body>
+</html>
+{% endautoescape %}
