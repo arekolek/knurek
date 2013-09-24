@@ -2,8 +2,10 @@
 package com.github.arekolek.knurek.sync;
 
 import android.content.ContentProviderOperation;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.res.AssetFileDescriptor;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.Email;
@@ -18,6 +20,9 @@ import android.text.TextUtils;
 
 import com.github.arekolek.knurek.R;
 import com.github.arekolek.knurek.auth.Constants;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 /**
  * Helper class for storing data in the platform content providers.
@@ -200,6 +205,7 @@ public class ContactOperations {
         if (!TextUtils.isEmpty(friendName)) {
             byte[] avatarBuffer = client.getAvatar(friendName);
             if (avatarBuffer != null) {
+                // TODO use saveBitmapToRawContact(context, rawContactId, photo)
                 mValues.clear();
                 mValues.put(Photo.PHOTO, avatarBuffer);
                 mValues.put(Photo.MIMETYPE, Photo.CONTENT_ITEM_TYPE);
@@ -391,6 +397,22 @@ public class ContactOperations {
         return ContentProviderOperation.newDelete(
                 addCallerIsSyncAdapterParameter(uri, isSyncOperation)).withYieldAllowed(
                 isYieldAllowed);
+    }
+
+    private static void saveBitmapToRawContact(Context context, long rawContactId, byte[] photo)
+            throws IOException {
+        Uri rawContactUri = ContentUris.withAppendedId(RawContacts.CONTENT_URI, rawContactId);
+        Uri outputFileUri = Uri.withAppendedPath(rawContactUri,
+                RawContacts.DisplayPhoto.CONTENT_DIRECTORY);
+        AssetFileDescriptor descriptor = context.getContentResolver().openAssetFileDescriptor(
+                outputFileUri, "rw");
+        FileOutputStream stream = descriptor.createOutputStream();
+        try {
+            stream.write(photo);
+        } finally {
+            stream.close();
+            descriptor.close();
+        }
     }
 
     private static Uri addCallerIsSyncAdapterParameter(Uri uri, boolean isSyncOperation) {
